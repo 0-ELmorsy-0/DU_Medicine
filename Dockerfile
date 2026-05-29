@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim AS builder
+FROM debian:bookworm-slim AS builder
 
 RUN apt-get update && apt-get install -y \
     build-essential cmake git wget \
@@ -12,10 +12,10 @@ RUN mkdir build && cd build && \
     cmake --build . --target telegram-bot-api -j$(nproc)
 
 # ── Final image ──────────────────────────────────────
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 RUN apt-get update && apt-get install -y \
-    libssl1.1 zlib1g \
+    libssl3 zlib1g \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /src/build/telegram-bot-api /usr/local/bin/telegram-bot-api
